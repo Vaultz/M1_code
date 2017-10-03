@@ -1,0 +1,224 @@
+
+Compilez votre code avec les options -Wall et -lpthread :
+$ gcc -Wall exemple.c -o resultat -lpthread
+
+
+
+/* THREADS */
+
+// creation
+int pthread_create(pthread_t* thread, const pthread_attr_t* attr,
+                   void* (*start_routine)(void*), void* arg);
+
+
+// id d'un thread
+pthread_t pthread_self(void);
+
+// id d’un processus
+pid_t getpid(void);
+
+// note : la nature de pthread_t et pid_t peut varier
+// selon les implémentations, à utiliser dans une comparaison
+int pthread_equal(pthread_t t1, pthread_t t2);
+
+
+// attributs
+typedef struct {
+        int                flags;        // detached ou joinable
+        size_t             stacksize;    // taille de la pile
+        void               *stackaddr;   // adresse de la pile
+        void               (*exitfunc)(void* status);
+        int                policy;       // ordonnancement
+        struct sched_param param;
+        unsigned           guardsize;
+} pthread_attr_t;
+
+
+
+pthread_attr_t attr;
+
+int pthread_attr_init(pthread_attr_t *attr);
+int pthread_attr_destroy(pthread_attr_t *attr);
+
+pthread_attr_getX   // getter pour obtenir la valeur de l'attribut X
+pthread_attr_setX   // setter pour modifier la valeur de l'attribut X
+
+// exemple :
+pthread_attr_getdetachstate(const pthread_attr_t * attr, int * valeur);
+pthread_attr_setdetachstate(const pthread_attr_t * attr, int * valeur);
+
+//
+int pthread_detach(pthread_t thread);
+int pthread_join(pthread_t thread, void** value_ptr);
+
+
+
+
+// autres fonctions de contrôle
+int pthread_abort(pthread_t thread);
+int pthread_kill(pthread_t thread, int sig);
+void pthread_exit(void* value_ptr);
+int pthread_cancel(pthread_t thread)
+
+
+
+//pthread_setcanceltype(PTHREAD_CANCEL_ENABLE, NULL); // thread "cancelable"
+//pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL); // à tout moment
+
+// par defaut, attend un "cancellation point", voir "man pthreads"
+//pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+
+int old_cancel_state;
+/* Début de la section critique. */
+pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &old_cancel_state);
+// code de la section critique
+/* Fin de la section critique. */
+pthread_setcancelstate(old_cancel_state, NULL);
+
+
+// rendre privées pour certains threads des données globales
+// pthread_key_create, pthread_key_delete, pthread_setspecific
+// et pthread_getspecific.
+
+
+/* NETOYAGE */
+
+void pthread_cleanup_push(void (*routine)(void *), void *routine_arg)
+void pthread_cleanup_pop(int execute)
+void pthread_exit(void* value_ptr);
+
+
+
+/* MUTEX */
+
+// les includes
+#include <pthread.h>   // pour les threads
+
+
+// creation et initialisation statique
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+
+
+// creation puis initialisation
+pthread_mutex_t mutex;
+int pthread_mutex_init(pthread_mutex_t * mutex,
+                       const pthread_mutexattr_t * attr);
+
+
+// destruction
+int pthread_mutex_destroy(pthread_mutex_t * mutex);
+
+
+
+// vérouille
+int pthread_mutex_lock(pthread_mutex_t * mutex);
+
+// dé-vérouille
+int pthread_mutex_unlock(pthread_mutex_t * mutex);
+
+
+
+
+// tente un verouillage
+int pthread_mutex_trylock(pthread_mutex_t * mutex);
+
+
+// tente un verrouillage jusqu'à une date limite
+#include <time.h>
+int pthread_mutex_timedlock(pthread_mutex_t *restrict mutex,
+                            const struct timespec *restrict abs_timeout);
+
+
+// structure pour stocker un temps (absolu ici)
+struct timespec { // timeout sice the epoch 1970-01-01 00:00:00 +0000 (UTC)
+    time_t tv_sec;      /* Seconds */
+    long   tv_nsec;     /* Nanoseconds [0 .. 999999999] */
+};
+
+
+
+
+// attributs 
+pthread_mutexattr_t * attr;
+int pthread_mutex_getX( … )
+int pthread_mutex_setX( … )
+
+type : comportement en cas de verrouillages multiples
+
+pshared : placé en mémoire partagée
+
+priocelling : niveau de priorité minimum de la section critique
+
+
+
+
+/* SEMAPHORE */
+
+// un compteur
+// une liste de tâches en attente
+
+
+// P() et V() permettent de manipuler le sémaphore.
+// Inventé par Edsger Dijkstra
+// "Proberen" et "Verhogen" => "tester" et "incrémenter" en néerlandais.
+
+
+
+
+P(sem) :
+    Compteur = compteur - 1
+    Si compteur < 0
+        Mettre la tâche en file d'attente
+    Sinon accorder la ressource
+
+
+
+
+V(sem) :
+    Compteur = compteur + 1
+    Si compteur >= 0
+        sortir une tâche de la file d'attente
+
+
+
+
+
+
+// les includes
+#include <pthread.h>   // pour les threads
+#include <semaphore.h> // pour les semaphores
+#include <fcntl.h>     // pour les flags O_CREAT, O_EXCL, ...
+
+
+
+
+// sémaphore anonymes, non persistants ("deprecated" sous MacOS)
+int sem_init (sem_t * sem, int pshared, unsigned int value);
+int sem_destroy (sem_t * sem);
+
+
+
+
+// sémaphore nommés et persistant
+sem_t * sem_open(const char* name, int oflag, ...);
+int sem_close (sem_t * sem);       // signaler que le semaphore n'est plus utile
+int sem_unlink (const char * name); // détruire le sémaphore
+
+
+
+
+// dans les deux cas
+int sem_wait (sem_t * sem); // primitive P()
+int sem_post (sem_t * sem); // primitive V()
+
+
+
+
+
+// autres fonctions pour demander le sémaphore
+int sem_trywait (sem_t * sem);
+int sem_timedwait(sem_t * sem, const struct timespec * abs_timeout);
+
+
+
