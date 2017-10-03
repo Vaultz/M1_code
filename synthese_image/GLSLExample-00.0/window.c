@@ -46,7 +46,7 @@ static void init(void) {
        TRANSFORMER LE TRIANGLE EN QUAD
     */
     // on rajoute des triplets de données pour les couleurs (format binaire)
-    1,0,0, 0,1,0, 0,0,1
+    1,0,0, 0,1,0, 0,0,1 // Rouge, Vert, Bleu
   };
   _pId = gl4duCreateProgram("<vs>shaders/basic.vs", "<fs>shaders/basic.fs", NULL);
   glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
@@ -60,12 +60,16 @@ static void init(void) {
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
 
-  // on indique une 3e donnée dans data
+  // glEnableVertexAttribArray attribue une nouvelle donnée au sommet ("vertex")
+  // on indique donc une 3e donnée dans les sommets
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (const void *)0);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const void *)((3 * 2) * sizeof *data));
 
   // on décrit le format de données de la nouvelle data
+  // param1 : numéro de la data
+  // param2 : forme de la data (ici, triplets)
+  // param5 : faut-il normaliser la couleur ?
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (const void *)((6 * 2) * sizeof *data));
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
