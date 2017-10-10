@@ -24,9 +24,13 @@ static GLuint _pId = 0;
 static GLuint _tId = 0;
 /*!\brief Cr�ation de la fen�tre et param�trage des fonctions callback.*/
 int main(int argc, char ** argv) {
+
+  // Si la fonction createWindow retourne 1 : le contexte OpenGL est prêt
   if(!gl4duwCreateWindow(argc, argv, "GL4Dummies", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			 _windowWidth, _windowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN))
     return 1;
+
+  // lancement de la fenêtre
   init();
   atexit(quit);
   gl4duwResizeFunc(resize);
@@ -36,11 +40,27 @@ int main(int argc, char ** argv) {
 }
 /*!\brief Initialise les param�tres OpenGL.*/
 static void init(void) {
-  GLfloat data[] = {
-    /* 3 coordonn�es de sommets */
-    -1.f, -1.f, 1.f, -1.f, 0.f,  1.f,
+
+  // le GAO contient les data décrivant l'objet triangle
+  // GLfloat data[] = {
+  //   /* 3 coordonn�es de sommets */
+  //   -1.f, -1.f, 1.f, -1.f, 0.f,  1.f,
+  //   /* 2 coordonn�es de texture par sommet */
+  //   0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f,
+  //   /* A FAIRE EN COURS :
+  //      AJOUTER TROIS COULEURS
+  //      TRANSFORMER LE TRIANGLE EN QUAD
+  //   */
+  //   // on rajoute des triplets de données pour les couleurs (format binaire)
+  //   1,0,0, 0,1,0, 0,0,1 // Rouge, Vert, Bleu
+  // };
+
+  // pour faire un carré
+ GLfloat data[] = {
+    /* 4 coordonn�es de sommets */
+    -1.f, -1.f, 1.f, -1.f, 0.f,  1.f, 1.f, 1.f,
     /* 2 coordonn�es de texture par sommet */
-    0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f,
+    0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 1.0f, 1.0f,
     /* A FAIRE EN COURS :
        AJOUTER TROIS COULEURS
        TRANSFORMER LE TRIANGLE EN QUAD
@@ -48,6 +68,7 @@ static void init(void) {
     // on rajoute des triplets de données pour les couleurs (format binaire)
     1,0,0, 0,1,0, 0,0,1 // Rouge, Vert, Bleu
   };
+
   _pId = gl4duCreateProgram("<vs>shaders/basic.vs", "<fs>shaders/basic.fs", NULL);
   glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
   resize(_windowWidth, _windowHeight);
@@ -64,7 +85,12 @@ static void init(void) {
   // on indique donc une 3e donnée dans les sommets
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (const void *)0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const void *)((3 * 2) * sizeof *data));
+
+  // triangle
+  // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const void *)((3 * 2) * sizeof *data));
+
+  // carré
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const void *)((4 * 2) * sizeof *data));
 
   // on décrit le format de données de la nouvelle data
   // param1 : numéro de la data
