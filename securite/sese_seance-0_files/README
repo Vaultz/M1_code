@@ -1,0 +1,30 @@
+sese - séance 0
+===============
+
+* Le fichier `secret` contient le message secret qu'on a vu en cours.
+
+* Le fichier `vigenere.c` contient un programme qui prend en argument "enc" ou
+  "dec" (pour chiffrer ou déchiffrer), et une clef.
+  Il lit le texte sur son entrée standard et écrit sur la sortie standard.
+
+  Le code n'est pas super car les fonctions vigenere_* sont faites pour être
+  totalement indépendantes, il est possible de le simplifier beaucoup.
+
+* Le script python `find_key_length.py` sert à trouver la taille de la clef
+  Attention si il renvoie 1 c'est qu'il n'a pas trouver suffisamment de
+  répétition, il faut essayer avec une autre valeur de n.
+
+* Pour l'analyse de fréquences :
+
+  - la commande `fold -w N` coupe un texte en lignes de longueur N.
+
+  - la commande `cut -c I` affiche seulement le Ième caractère de chaque ligne.
+
+  - la commande `sort` trie les lignes par ordre alphabétique, ou numérique si
+    on lui passe l'option -n.
+
+  - la commande `uniq` élimine les lignes identiques à la suite, et les compte
+    si on lui passe l'option -c.
+
+
+Amusez vous bien…
