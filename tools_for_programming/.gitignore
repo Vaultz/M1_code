@@ -52,5 +52,5 @@ Mkfile.old
 dkms.conf
 
 #Documentation files
-/html
-/latex
+html/
+latex/
