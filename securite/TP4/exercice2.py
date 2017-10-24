@@ -4,7 +4,7 @@ sXob = [14, 5, 6, 10, 3, 15, 7, 9, 11, 0, 4, 1, 2, 8, 13]
 
 key1 = 0b0101
 key2 = 0b1010
-message = 0b1100
+message = 0b1111
 
 def makeXor (message, key):
     return sBox[message ^ key]
@@ -14,21 +14,36 @@ print('BEGIN : the old message is', bin(message) )
 r1 = makeXor(message, key1)
 print('THEN : the current message is', bin(r1))
 r2 = makeXor(r1, key2)
-print('END : the new message is', bin(r2) )
+print('END : the new message is', bin(r2), "\n" )
 
 
 print('### PHASE 2 ###')
-# We try to reverse the xor until we reach the original message
-key1Found = 0;
-key2Found = 0;
-tryKey1 = 0b0000;
-tryKey2 = 0b0000;
+firstKeyFound = 0
+secondKeyFound = 0
+firstKey = 0b0
+secondKey = 0b0
+tryMessage = 0b0
+tempMessage = 0b0
+attempts = 0
 
-# TODO : make the second loop
-while key2Found == 0 :
-    if makeXor(r2, tryKey) == key2:
-        key2Found = 1;
-        print("FOUND : ", bin(key2Found))
-    else:
-        tryKey+=1
-    print("TRY : whith key ", bin(tryKey2))
+while firstKeyFound == 0:
+    # we reverse-xor (let's call that rox) our temporary message with a first key
+    tempMessage = makeXor(r2, firstKey)
+    print("FIRST KEY : ", bin(firstKey))
+    # then we rox it with a second key while we haven't found the original message
+    while (secondKeyFound == 0):
+        print("SECOND KEY ", bin(secondKey))
+        # wring message : roxing again
+        if makeXor(tempMessage, secondKey) != message:
+            print("SECOND KEY FAILED : ", bin(secondKey))
+            tryMessage = makeXor(tempMessage, secondKey)
+            secondKey+=1
+            attempts+=1
+        # when the proper message is found, ending the loop
+        else:
+            print(attempts, "attempts")
+            print("MESSAGE FOUND : ", bin(makeXor(tempMessage, secondKey)), "\n")
+            firstKeyFound = secondKeyFound = 1
+
+    # increasing the first key, then retry...
+    firstKey+=1
