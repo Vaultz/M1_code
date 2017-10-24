@@ -1,0 +1,157 @@
+pthread_rwlock_retour
+
+SOUS MACOS : Exemple de retour du programme
+
+$ gcc -Wall pthread_rwlock_exemple.c -lpthread
+$ ./a.out
+
+// Tous les lecteurs tentent d'accéder à la ressource
+Lecteur 0 veut consulter la ressource
+Lecteur 1 veut consulter la ressource
+Lecteur 2 veut consulter la ressource
+Lecteur 3 veut consulter la ressource
+Lecteur 4 veut consulter la ressource
+Lecteur 0 consulte la ressource : A	// l'un d'entre eux y parvient
+
+// Tous les écrivains tentent d'accéder à la ressource
+Ecrivain 0 veut modifier la ressource
+Ecrivain 1 veut modifier la ressource
+Ecrivain 2 veut modifier la ressource
+
+// ... mais puisque les lecteurs s'étaient déjà positionnés : les écrivains sont mis en attente ; les lecteurs accèdent à la variable
+Lecteur 1 consulte la ressource : A
+Lecteur 2 consulte la ressource : A
+Lecteur 3 consulte la ressource : A
+Lecteur 4 consulte la ressource : A
+Lecteur 0 a fini de consulter la ressource : A
+Lecteur 2 a fini de consulter la ressource : A
+Lecteur 3 a fini de consulter la ressource : A
+
+// La plupart des lecteurs ont fini de consulter ; mais puisque le 1 n'a pas fini, la variable est toujours lockée en écriture 
+Lecteur 3 veut consulter la ressource
+Lecteur 0 veut consulter la ressource
+Lecteur 1 a fini de consulter la ressource : A
+Lecteur 4 a fini de consulter la ressource : A
+
+// L'écrivain modifie la ressource ; pourtant les lecteur 0 et 3 demandent toujours à la consulter. Par conséquent : les écrivains 'semblent' favorisés
+Ecrivain 0 modifie la ressource : A
+
+// L'écrivain bloque toujours la ressource : les lecteurs tentent d'y accéder en vain
+Lecteur 2 veut consulter la ressource
+Lecteur 4 veut consulter la ressource
+Lecteur 1 veut consulter la ressource
+
+// L'écrivain 0 relâche la ressource et donne la main à ses pairs
+Ecrivain 0 : maintenant la ressource est B
+Ecrivain 1 modifie la ressource : B
+Ecrivain 1 : maintenant la ressource est C
+Ecrivain 2 modifie la ressource : C
+Ecrivain 0 veut modifier la ressource
+Ecrivain 2 : maintenant la ressource est D
+
+// Les écrivains ont fini ; la ressource est libérée 
+Lecteur 3 consulte la ressource : D
+Lecteur 2 consulte la ressource : D
+Lecteur 0 consulte la ressource : D
+Lecteur 4 consulte la ressource : D
+Lecteur 1 consulte la ressource : D
+Lecteur 2 a fini de consulter la ressource : D
+Lecteur 0 a fini de consulter la ressource : D
+Lecteur 4 a fini de consulter la ressource : D
+Lecteur 1 a fini de consulter la ressource : D
+// Les lecteurs ont fini : la ressource est relâchée
+
+Lecteur 0 veut consulter la ressource
+Ecrivain 1 veut modifier la ressource
+Ecrivain 2 veut modifier la ressource
+Lecteur 3 a fini de consulter la ressource : D
+Lecteur 2 veut consulter la ressource
+Ecrivain 0 modifie la ressource : D
+// L'écrivain 0 parvient de nouveau à accéder à la ressource alors qu'un lecteur 0 voulait y accéder avant lui. Nouvel indice que les écrivains sont favorisés.
+
+Lecteur 4 veut consulter la ressource
+Lecteur 1 veut consulter la ressource
+Lecteur 3 veut consulter la ressource
+Ecrivain 0 : maintenant la ressource est E
+Ecrivain 0 veut modifier la ressource
+Lecteur 0 consulte la ressource : E
+Lecteur 0 a fini de consulter la ressource : E
+Ecrivain 1 modifie la ressource : E
+Ecrivain 1 : maintenant la ressource est F
+Ecrivain 2 modifie la ressource : F
+Lecteur 0 veut consulter la ressource
+Ecrivain 1 veut modifier la ressource
+Ecrivain 2 : maintenant la ressource est G
+Lecteur 2 consulte la ressource : G
+Lecteur 4 consulte la ressource : G
+Lecteur 1 consulte la ressource : G
+Lecteur 3 consulte la ressource : G
+Lecteur 4 a fini de consulter la ressource : G
+Lecteur 1 a fini de consulter la ressource : G
+Lecteur 4 veut consulter la ressource
+Lecteur 2 a fini de consulter la ressource : G
+Lecteur 3 a fini de consulter la ressource : G
+Ecrivain 0 modifie la ressource : G
+Lecteur 3 veut consulter la ressource
+Ecrivain 0 : maintenant la ressource est H
+Lecteur 0 consulte la ressource : H
+Ecrivain 2 veut modifier la ressource
+Lecteur 1 veut consulter la ressource
+Ecrivain 0 veut modifier la ressource
+Lecteur 0 a fini de consulter la ressource : H
+Ecrivain 1 modifie la ressource : H
+Lecteur 0 veut consulter la ressource
+Lecteur 2 veut consulter la ressource
+Ecrivain 1 : maintenant la ressource est I
+Ecrivain 1 veut modifier la ressource
+Lecteur 4 consulte la ressource : I
+Lecteur 3 consulte la ressource : I
+Lecteur 3 a fini de consulter la ressource : I
+Lecteur 4 a fini de consulter la ressource : I
+Ecrivain 2 modifie la ressource : I
+Lecteur 3 veut consulter la ressource
+Lecteur 4 veut consulter la ressource
+Ecrivain 2 : maintenant la ressource est J
+Lecteur 1 consulte la ressource : J
+Ecrivain 2 veut modifier la ressource
+Lecteur 1 a fini de consulter la ressource : J
+Ecrivain 0 modifie la ressource : J
+Lecteur 1 veut consulter la ressource
+Ecrivain 0 : maintenant la ressource est K
+Lecteur 0 consulte la ressource : K
+Lecteur 2 consulte la ressource : K
+Lecteur 2 a fini de consulter la ressource : K
+Lecteur 2 veut consulter la ressource
+Lecteur 0 a fini de consulter la ressource : K
+Ecrivain 1 modifie la ressource : K
+Ecrivain 0 veut modifier la ressource
+Ecrivain 1 : maintenant la ressource est L
+Ecrivain 1 veut modifier la ressource
+Lecteur 3 consulte la ressource : L
+Lecteur 4 consulte la ressource : L
+Lecteur 3 a fini de consulter la ressource : L
+Lecteur 0 : s'en va
+Lecteur 4 a fini de consulter la ressource : L
+Lecteur 3 : s'en va
+Ecrivain 2 modifie la ressource : L
+Ecrivain 2 : maintenant la ressource est M
+Ecrivain 2 veut modifier la ressource
+Lecteur 2 consulte la ressource : M
+Lecteur 1 consulte la ressource : M
+Lecteur 1 a fini de consulter la ressource : M
+Lecteur 4 : s'en va
+Lecteur 2 a fini de consulter la ressource : M
+Ecrivain 0 modifie la ressource : M
+Ecrivain 0 : maintenant la ressource est N
+Ecrivain 0 : s'en va
+Ecrivain 1 modifie la ressource : N
+Lecteur 1 : s'en va
+Ecrivain 1 : maintenant la ressource est O
+Ecrivain 1 : s'en va
+Ecrivain 2 modifie la ressource : O
+Ecrivain 2 : maintenant la ressource est P
+Lecteur 2 : s'en va
+Ecrivain 2 : s'en va
+Consultation et modifications terminées
+$
+

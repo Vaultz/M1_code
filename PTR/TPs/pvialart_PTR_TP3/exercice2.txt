@@ -1,0 +1,3 @@
+D'après la documentation, pthread_rwlock ne favorise ni les écrivains ni les lecteurs : tout dépend de l'algorithme employé et de la machine.
+D'après ces informations, il semble que l'ordonnancement diffère en fonction de l'OS utilisé (MacOS ou Linux), voire de la version installée.
+Il reste toutefois possible de définir algorithmiquement l'odonnancement, en jouant soit avec les rwlock et wrlock, soit avec les mutex.

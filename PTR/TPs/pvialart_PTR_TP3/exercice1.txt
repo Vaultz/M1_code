@@ -1,0 +1,99 @@
+/** 1 **/
+
+/** 2 **/
+D'après l'output, on constate que les écrivains lockent la ressource en écriture ; les lecteurs la lockent en lecture. 
+Le modèle semble toutefois équilibré, ou en tout cas, on ne peut pas dégager de préférence. 
+/** 3 **/
+Cf. les commentaires du retour.
+
+
+
+/* Commandes */
+$ gcc -Wall pthread_rwlock_exemple.c -pthread
+$ ./a.out 
+
+/* Retour */
+
+Lecteur 0 veut consulter la ressource
+Lecteur 0 consulte la ressource : A
+Lecteur 1 veut consulter la ressource
+Lecteur 1 consulte la ressource : A
+Lecteur 2 veut consulter la ressource
+Lecteur 2 consulte la ressource : A
+Lecteur 3 veut consulter la ressource
+Lecteur 3 consulte la ressource : A
+Lecteur 4 veut consulter la ressource
+Lecteur 4 consulte la ressource : A
+// La totalité des lecteurs consulte la ressource
+
+Ecrivain 0 veut modifier la ressource
+Ecrivain 1 veut modifier la ressource
+Ecrivain 2 veut modifier la ressource
+// Les trois écrivains tentent de modifier la ressource : mais les lecteurs la consultent toujours. Les écrivains attendent
+
+Lecteur 2 a fini de consulter la ressource : A
+Lecteur 3 a fini de consulter la ressource : A
+Lecteur 0 a fini de consulter la ressource : A
+// Les lecteurs déverrouillent la ressource 
+
+// Pas de nouvelle tentative des écrivains : les lecteurs conservent la main sur la ressource.
+Lecteur 3 veut consulter la ressource
+Lecteur 3 consulte la ressource : A
+Lecteur 2 veut consulter la ressource
+Lecteur 2 consulte la ressource : A
+Lecteur 0 veut consulter la ressource
+Lecteur 0 consulte la ressource : A
+Lecteur 1 a fini de consulter la ressource : A
+Lecteur 4 a fini de consulter la ressource : A
+Lecteur 2 a fini de consulter la ressource : A
+Lecteur 3 a fini de consulter la ressource : A
+Lecteur 0 a fini de consulter la ressource : A
+// Les lecteurs ont de nouveau l'occasion de consulter la ressource
+
+Ecrivain 0 modifie la ressource : A
+Ecrivain 0 : maintenant la ressource est B
+// Un premier écrivain parvient à accéder à la ressource et à la modifier
+
+Ecrivain 1 modifie la ressource : B
+Ecrivain 0 veut modifier la ressource
+// Un second écrivain tente de la modifier également
+
+Lecteur 0 veut consulter la ressource
+Lecteur 2 veut consulter la ressource
+Lecteur 1 veut consulter la ressource
+// Les lecteurs tentent d'accéder à la ressource, mais celle-ci est verrouillée par l'écrivain 1
+
+Ecrivain 1 : maintenant la ressource est C
+Ecrivain 2 modifie la ressource : C
+Ecrivain 2 : maintenant la ressource est D
+Ecrivain 0 modifie la ressource : D
+// Les écrivains accèdent à la ressource et la modifient
+
+// Ci-dessous : le cycle reprend
+Lecteur 4 veut consulter la ressource
+Lecteur 3 veut consulter la ressource
+Ecrivain 0 : maintenant la ressource est E
+Lecteur 2 consulte la ressource : E
+Lecteur 1 consulte la ressource : E
+Lecteur 3 consulte la ressource : E
+Lecteur 4 consulte la ressource : E
+Lecteur 0 consulte la ressource : E
+Lecteur 3 a fini de consulter la ressource : E
+Lecteur 0 a fini de consulter la ressource : E
+Lecteur 3 veut consulter la ressource
+Lecteur 3 consulte la ressource : E
+Lecteur 3 a fini de consulter la ressource : E
+Ecrivain 1 veut modifier la ressource
+Ecrivain 2 veut modifier la ressource
+Lecteur 1 a fini de consulter la ressource : E
+Lecteur 2 a fini de consulter la ressource : E
+Lecteur 4 a fini de consulter la ressource : E
+Ecrivain 1 modifie la ressource : E
+Ecrivain 0 veut modifier la ressource
+Lecteur 4 veut consulter la ressource
+Lecteur 2 veut consulter la ressource
+Lecteur 0 veut consulter la ressource
+
+
+
+

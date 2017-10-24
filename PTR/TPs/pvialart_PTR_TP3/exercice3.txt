@@ -1,0 +1,52 @@
+/** Output du modèle équilibré **/
+
+// Les écrivains tentent d'accéder à la ressource ; le 1 a même le temps de la modifier
+Ecrivain 1 veut modifier la ressource
+Ecrivain 1 modifie la ressource : A
+Ecrivain 2 veut modifier la ressource
+Ecrivain 0 veut modifier la ressource
+
+// Les lecteurs demandent l'accès, mais les écrivains ont fait la demande en premier
+Lecteur 4 veut consulter la ressource
+Lecteur 3 veut consulter la ressource
+Lecteur 2 veut consulter la ressource
+Lecteur 1 veut consulter la ressource
+Lecteur 0 veut consulter la ressource
+
+// Les écrivains modifient la ressource dans l'ordre de la demande
+Ecrivain 1 : maintenant la ressource est B
+Ecrivain 2 modifie la ressource : B
+Ecrivain 2 : maintenant la ressource est C
+Ecrivain 0 modifie la ressource : C
+Ecrivain 0 : maintenant la ressource est D
+
+// La ressource libérée, les lecteurs peuvent maintenant consulter la ressource
+Lecteur 4 consulte la ressource : D
+Lecteur 3 consulte la ressource : D
+Lecteur 2 consulte la ressource : D
+Lecteur 1 consulte la ressource : D
+Lecteur 0 consulte la ressource : D
+Lecteur 4 a fini de consulter la ressource : D
+
+// Les écrivains demandent l'accès, mais les lecteurs consultent toujours
+Ecrivain 1 veut modifier la ressource
+Ecrivain 0 veut modifier la ressource
+
+Lecteur 0 a fini de consulter la ressource : D
+Lecteur 0 veut consulter la ressource
+
+Ecrivain 2 veut modifier la ressource
+
+// Les lecteurs finissent de consulter
+Lecteur 3 a fini de consulter la ressource : D
+Lecteur 2 a fini de consulter la ressource : D
+Lecteur 1 a fini de consulter la ressource : D
+
+// L'écrivain 1 parvient à modifier la ressource
+Ecrivain 1 modifie la ressource : D
+
+// Demande des lecteurs : mais l'écrivain 1 bloque
+Lecteur 3 veut consulter la ressource
+Lecteur 4 veut consulter la ressource
+
+// Conclusion : la file First In First Out est bien respectée

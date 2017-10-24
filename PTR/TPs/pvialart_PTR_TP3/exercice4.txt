@@ -1,0 +1,14 @@
+Le problème est similaire à celui du modèle précédent, dans le sens où lorsqu'un membre d'un groupe accède à la variable, il la verrouille de façon à ce que seul les membres
+de son propre groupe puissent y accéder par la suite. Les membres de l'autre groupe qui tâcheraient d'y accéder sont mis en attente jusqu'à ce que le premier groupe ait libéré l'accès.
+
+L'algorithme serait le suivant :
+
+1) l'étudiant arrive devant la salle
+	SI 	au moins un étudiant de l'autre groupe se trouve dedans : attend que la salle se libère
+	SI 	la salle est libre : il entre dans la salle et verrouille l'accès à l'autre groupe
+	SI	au moins un étudiant de son propre groupe se trouvent dans la salle : il entre
+2) l'étudiant travaille : délai d'attente
+3) l'étudiant sort de la salle 
+	SI 	il est le dernier à partir : libère la salle 
+
+L'algorithme est à répéter pour chaque élève de chaque groupe.
