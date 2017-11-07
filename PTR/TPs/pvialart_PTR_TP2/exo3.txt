@@ -1,0 +1,9 @@
+L'interblocage est provoqué par le fait que chaque philosophe attrape la fourchette à sa droite,
+puis celle à sa gauche ; la solution est donc d'introduire un gaucher.
+
+Les modifications du code sont :
+- le thread philo_thread() devient philo_thread_righthanded()
+- on implémente un nouveau thread, philo_thread_lefthanded(), dans lequel on inverse l'ordre dans
+lequel le philosophe attrape les fourchettes (il prend la gauche en premier)
+- on modifie la boucle du main dans lequel les threads philosophes sont lancés : à la ligne 135
+on initialise le premier thread comme gaucher, puis tous les suivants comme droitiers

@@ -1,0 +1,9 @@
+La solution est de rajouter deux sémaphores : un pour les plats prêts à être mangés, et un
+second pour les plats prêts à être préparés.
+En pratique, le parent commence par sem_wait et se termine par un sem_post
+adressé à l'enfant ; de même pour l'enfant, qui se termine par un sem_post adressé au parent.
+Le parent est ensuite lancé en premier par le main() ; par la suite, le parent et l'enfant se renverront
+l'initiative jusqu'à ce que le nombre de plats à préparer soit écoulé.
+
+Afin que plusieurs consommateurs puissent remplir le buffer simultanément, il
+faut implémenter un mutex pour sécuriser la variable.

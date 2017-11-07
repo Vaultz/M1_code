@@ -1,0 +1,4 @@
+Dans ce modèle, le consommateur doit attendre que le tampon soit plein avant d'agir.
+Inverser les deux propositions l'autorisera à consulter et vider le tampon sans savoir
+si celui-ci contiendra un message : il tentera alors d'accéder à une donnée qui n'existe pas,
+et empêchera le producteur de remplir le tampon.

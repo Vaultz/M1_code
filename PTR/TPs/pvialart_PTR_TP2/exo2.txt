@@ -1,0 +1,2 @@
+NUM_EATING peut-être mis sur 2 maximum, ce qui est curieux puisque chque philosophe a besoin
+de deux fourchettes pour manger.

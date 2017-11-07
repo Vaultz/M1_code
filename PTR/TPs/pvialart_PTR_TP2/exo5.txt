@@ -1,0 +1,7 @@
+Lancer le programme donne :
+$ ./a.out
+L'enfant 0 attend une assiette pleine
+Erreur, aucune assiette disponible pour l'enfant 0
+
+Le problème est donc que le consommateur (l'enfant) tente d'accéder à la ressource alors que le
+producteur (le parent) n'a pas encore rempli le buffer
