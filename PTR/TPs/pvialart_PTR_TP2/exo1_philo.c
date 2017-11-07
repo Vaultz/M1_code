@@ -52,6 +52,7 @@ void* philo_thread(void* arg) {
         printf("phylo %d attend la fourchette %d\n", p.num, LEFT(p.num));
         forkWait(p.left_fork);
         printf("phylo %d attend la fourchette %d\n", p.num, LEFT(p.num));
+
         printf("phylo %d mange\n", p.num);
         usleep(10000);
         forkPost(p.left_fork);
