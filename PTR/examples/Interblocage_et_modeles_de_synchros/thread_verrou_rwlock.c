@@ -7,13 +7,15 @@
 #include <stdlib.h>
 #include <time.h>
 
+// système identique au mutex, à la différence qu'il permet de gérer séparément lecture et écriture
+
 pthread_rwlock_t lock;
 char data = 'A';
 
 void* lecteur(void *arg) {
     int id = *((int*) arg);
     int i;
-    
+
     for (i = 0; i < 5; i++) {
         printf("Lecteur %d veut consulter la ressource\n", id);
         pthread_rwlock_rdlock(&lock);
@@ -30,7 +32,7 @@ void* lecteur(void *arg) {
 void* ecrivain(void *arg) {
     int id = *((int*) arg);
     int i;
-    
+
     for (i = 0; i < 5; i++) {
         printf("Ecrivain %d veut modifier la ressource\n", id);
         pthread_rwlock_wrlock(&lock);
@@ -49,7 +51,7 @@ int main() {
     int i, nb[8];
     srand(time(NULL)); // initialisation de rand
     pthread_t tid[8];
-    
+
     pthread_rwlock_init(&lock, NULL);
     for (i = 0; i < 5; i++) {
         nb[i] = i;
@@ -59,12 +61,12 @@ int main() {
         nb[i+5] = i;
         pthread_create(&tid[i+5], NULL, ecrivain, (void*) &nb[i+5]);
     }
-    
+
     for (i = 0; i < 8; i++) {
         pthread_join(tid[i], NULL);
     }
     puts("Consultation et modifications terminées");
-    
+
     pthread_rwlock_destroy(&lock);
     return 0;
 }

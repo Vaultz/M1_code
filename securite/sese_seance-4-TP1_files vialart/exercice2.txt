@@ -1,0 +1,14 @@
+Exercice 2
+  1. Une attaque de force brute permet de casser le chiffrement : en effet en partant du message chiffré,
+  il suffit de faire plusieurs essais de décryptage en sens inverse jusqu'à obtenir le bon message (de plus, un seul tour ne chiffre que la première partie du message ;
+  avec une clé de 4 bits, on obtient 2^4=16).
+  Un double tour rend cette manipulation plus complexe (2^8=256)
+
+  correction : Le type d'attaque approprié pour casser le chiffrement de façon triviale est l'attaque à clair connu
+
+  2. En partant du message chiffré final, on ne sait jamais quand on obtiendra la clé de chiffrement ayant servi au deuxième tour.
+  (car même en ayant cette clé, on obtient un message déjà crypté)
+
+  3. Il faudrait faire 2^4=16 tentatives (dans le pire des cas) pour trouver la clé d'origine
+
+  4. 2^8=256 tentatives sont nécessaires dans le pire des cas

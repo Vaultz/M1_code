@@ -14,11 +14,11 @@ int stop = 0;
 
 void* enfant(void *arg) { // mange les gateaux
     int id = *((int*) arg);
-    int mange = 0;
+    int mange = 0;      // combien de gâteaux mangés ?
     while(1) {
         pthread_mutex_lock(&mutex);
         while(gateaux == 0) {
-            if (stop == 1) {
+            if (stop == 1) {    // est-ce que le parent a fini de produire ?
                 pthread_mutex_unlock(&mutex);
                 goto fin;
             }
@@ -50,7 +50,7 @@ void* parent(void *arg) { // prépare les gateaux
         sleep(2);
     }
     pthread_mutex_lock(&mutex);
-    stop = 1;
+    stop = 1;     // indique qu'il n'y a plus de gâteaux
     pthread_mutex_unlock(&mutex);
     return NULL;
 }
@@ -75,4 +75,3 @@ int main() {
     pthread_mutex_destroy(&mutex);
     return 0;
 }
-

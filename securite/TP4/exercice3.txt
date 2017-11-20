@@ -1,5 +1,0 @@
-Exercice 3
-  1. La fonction de tour n'est pas linéraire car le xor emploie la boîte noire sBox, qui offre une sécurité supplémentaire par rapport à la clé
-  et fausse la linéarité.
-
-  2. Je n'ai pas compris l'énoncé.
