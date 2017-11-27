@@ -1,0 +1,19 @@
+En inversant P(m) et P(plein) comme suit :
+
+consommateur() {
+    buf type *tp;
+    while(1){
+        P(m);                                                          // (*)
+        P(plein);                // y a t-il un message à consommer ?  // (*)
+        tp = obtenir(tampon);    // obtention du tampon plein
+        V(m);
+        consommer(tp);
+        P(m);
+        placer(tp, tampon);      // met tampon dans liste des tampons
+        V(m);
+        V(vide);                 // signale le libération du tampon consommé
+    }
+}
+
+
+Si tous les tampons sont vides, le mutex est verrouillé et le consommateur se bloque sur le sémaphore "plein" en attente d'un tampon plein. Cependant, comme le mutex est vérrouillé, le producteur reste bloqué en attente et ne peut pas remplir les tampons : c'est un cas d'étreinte fatale ou inter-blocage.

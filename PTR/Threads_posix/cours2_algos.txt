@@ -1,0 +1,208 @@
+Algorithmes, complexité et temps réel - exemple des algorithmes de tri
+
+--------------------------------------------------------------------------------
+complexité d'un algo, notation O
+=> estimation dans le pire des cas
+
+https://fr.wikipedia.org/wiki/Complexit%C3%A9_en_temps
+
+tableau simple
+=> avec n éléments, recherche O(n)
+
+tableau associatif (avec clef)
+= table de hashage en C, map en C++, dict en python, hashmap en Java
+=> accès direct à un élément, recherche O(1)
+
+jeu "deviner un nombre entre 1 et 100"
+=> astuce proposer un chiffre médian : complexité logarithmique Olog(n)
+
+
+complexités
+1               Temps constant indépendant de la donnée
+log(n)          Temps logarithmique
+n               Temps linéaire
+n * log(n)
+n^2             Temps quadratique
+n^k             Temps polynomial
+k^n             Temps exponentiel : dès que n devient « grand »
+                                    le calcul prend un temps excessif.
+
+exemple graphique :
+https://openclassrooms.com/courses/apprendre-a-programmer-avec-ada/algorithmique-tri-et-complexite#/id/r-2145327
+appli pour faire des graphiques en ligne et comparer les complexités :
+https://www.desmos.com/calculator/
+
+plus sur la notation grand O:
+https://cours.etsmtl.ca/SEG/GSavard/mat210/Documents/grandO.pdf
+
+--------------------------------------------------------------------------------
+Tri par selection (tri par extraction)
+
+3 1 4 1 5 9 2 6 5 3
+[1] 3 4 1 5 9 2 6 5 3
+[1 1] 4 3 5 9 2 6 5 3
+[1 1 2] 3 5 9 4 6 5 3
+[1 1 2 3] 5 9 4 6 5 3
+[1 1 2 3 3] 9 4 6 5 5
+etc...
+
+on cherche le plus petit élément et on le met au début
+on recommence avec le reste des éléments du tableau
+
+n * (n-1) / 2  comparaisons
+
+=> comparer avec les complexités n, n * log(n), n^2
+   comparer pour de grandes valeurs de n
+   en conclure que cet algo est de complexité O(n^2)
+
+=> temps réel, on voudrait plutôt un algo rapide...
+
+--------------------------------------------------------------------------------
+Tri rapide (quicksort)
+
+principe : "diviser pour régner"
+
+3 1 4 1 5 9 2 6 5 3
+version basique de quick sort : on prend le premier élément comme pivot, on met les plus petits avant, les plus grands après.
+
+http://me.dt.in.th/page/Quicksort/
+
+Si la liste est déjà en ordre inverse : pire des cas
+=> temps quadratique (n^2) comme le tri par selection
+
+pour tenter d'éviter le problème indiqué :
+- choisir le pivot au hasard
+- appliquer une permutation aléatoire au tableau avant de commencer
+=> mieux en moyenne, mais le risque persiste.
+
+complexité :
+au mieux : nlog(n)
+en moyenne : nlog(n)
+au pire : n^2
+
+=> temps réel, on voudrait un algo qui respecte les 3 caractéristiques
+   necessaires d'un système temps réel:
+- Prévisibilité   OK
+- Déterminisme    NON
+- Fiabilité       pas non plus du coup...
+
+--------------------------------------------------------------------------------
+Tri fusion (merge sort)
+
+principe : si on a deux listes triées, on peut facilement les fusionner
+
+[1, 5]  et  [4, 9]
+=>  1 < 4 : oui => 1 + fusion de [5] et [4, 9]
+=>  5 < 4 : non => 1 + 4 + fusion de [5] et [9]
+=>  5 < 9 : oui => 1 + 4 + 5 + fusion de [] et [9]
+=>  une des listes est vide, résultat : 1 + 4 + 5 + 9
+
+=> complexité de la fusion ?   linéaire
+
+
+On divise la liste initiale récursivement, jusqu'à avoir des groupes de 2
+on les trie, et on fusionne récursivement
+
+3 1 4 1 5 9 2 6 5 3
+3 1 4 1 5              |        9 2 6 5 3
+3 1    |   4 1 5                9 2      |      6 5 3
+1 3        4 1  |  5            2 9             6 5  |  3
+1 3        1 4     5            2 9             5 6     3
+1 1 3 4            5            2 5 6 9                 3
+1 1 3 4 5                       2 3 5 6 9
+1 1 2 3 3 4 5 6 9
+
+=> quelques soient les données, le temps est le même
+=> mais on a besoin de place supplémentaire pour stocker les tris
+   intermédiaires.
+
+=> dans le meilleur des cas, le tri rapide est plus rapide que le tri fusion
+   puisque l’étape "fusion" n’est pas nécessaire
+
+=> mais dans le pire des cas, le tri fusion c'est encore nlog(n) !
+   plus adapté au temps réel.
+
+complexité en temps :
+au mieux : nlog(n)
+en moyenne : nlog(n)
+au pire : nlog(n)
+
+complexité en espace : une copie des données
+
+démonstration : http://laure.gonnord.org/pro/teaching/AlgoProg1213_IMA/complexite_fusion.pdf
+
+--------------------------------------------------------------------------------
+comparer leur utilisation en temps réel.
+
+Comparer leurs complexités : voir tableau
+https://fr.wikipedia.org/wiki/Algorithme_de_tri
+
+Quels algos sont adaptés au temps réel ?
+- rapide
+- prévisible : pas de grosse variation en fonction de la nature des données.
+
+--------------------------------------------------------------------------------
+Utilisation de la mémoire et de la pile
+
+
+fonction récursionTerminale(n) :
+  // ...
+  retourne récursionTerminale(n - 1)
+
+fonction récursionNonTerminale(n) :
+  // ...
+  retourne n + récursionNonTerminale(n - 1)
+
+=> une récursion terminale retourne un appel simple à la fonction et non une
+   composition faisant intervenir l'appel récursif.
+   elle peut être optimisée et transformée en itération :
+   diminution de la pile d'exécution (ex : lisp fréquents dépassements de pile)
+
+
+
+accès à des zones mémoire éloignées : risque de défaut de page, temps de chargement en mémoire.
+=> utiliser des zones contigües de mémoire
+   ex : liste chainée => réserver la mémoire en un bloc avant de faire le
+                         chaînage entre différents morceaux.
+
+
+Un algorithme de tri "externe" : permet de trier des volumes de données qui ne tiennent pas entièrement en mémoire.
+
+approches possibles pour le problème de la mémoire utilisée :
+	- algo qui ne travaille que sur des sous-ensembles des données
+	  ex : tri fusion
+	       => quicksort : plus d'accès à la mémoire externe en cas de gros
+	          volumes à trier
+	- trier des données partielles : remplacer les données réelles par des clefs
+	  plus petites qui les représentent
+
+compromis mémoire / complexité / determinisme : algorithmes hybrides
+	  => ex : Timsort = tri fusion + tri par insertion
+              Introsort = tri rapide + tri par tas.
+
+
+A lire pour mieux comprendre le fonctionnement de la mémoire :
+Ulrich Drepper, 2007, What Every Programmer Should Know About Memory
+https://people.freebsd.org/~lstewart/articles/cpumemory.pdf
+
+
+--------------------------------------------------------------------------------
+Conclusion
+
+Tenir compte des contraintes :
+	- taille de données,
+	- caractéristiques des données,
+	- matériel utilisé,
+	- taille de la mémoire vive, etc.
+
+Choisir un algo en fonction de :
+	- complexité en temps
+	- complexité en espace
+	- possibilité de le paralleliser
+
+Choix empirique :
+	- pas toujours fiable : trop de paramètres
+	- tester sur des données réelles
+
+
+
